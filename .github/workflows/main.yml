@@ -1,0 +1,16 @@
+name: Cloudflare VPS
+
+on: workflow_dispatch
+
+jobs:
+  start-vps:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Cloudflare Tunnel
+      run: |
+        sudo apt update
+        sudo apt install -y wget
+        wget https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared
+        chmod +x cloudflared
+        ./cloudflared tunnel --url ssh://localhost:22 --no-autoupdate --token ${{ secrets.CF_TUNNEL_TOKEN }} &
+        sleep 21600  # 6 hours VPS uptime
